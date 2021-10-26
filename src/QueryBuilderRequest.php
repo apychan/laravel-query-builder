@@ -18,6 +18,8 @@ class QueryBuilderRequest extends Request
 
     private static $filterArrayValueDelimiter = ',';
 
+    private static $quickSearchArrayValueDelimiter = ',';
+
     public static function setArrayValueDelimiter(string $delimiter): void
     {
         static::$filterArrayValueDelimiter = $delimiter;
@@ -25,6 +27,7 @@ class QueryBuilderRequest extends Request
         static::$appendsArrayValueDelimiter = $delimiter;
         static::$fieldsArrayValueDelimiter = $delimiter;
         static::$sortsArrayValueDelimiter = $delimiter;
+        static::$quickSearchArrayValueDelimiter = $delimiter;
     }
 
     public static function fromRequest(Request $request): self
@@ -103,6 +106,19 @@ class QueryBuilderRequest extends Request
         });
     }
 
+    public function quickSearches()
+    {
+        $filterParameterName = config('query-builder.parameters.quickSearch');
+
+        $value = $this->getRequestData($filterParameterName, null);
+
+        if (!is_string($value)) {
+            return null;
+        }
+
+        return $this->getFilterValue($value);
+    }
+
     /**
      * @param $value
      *
@@ -163,6 +179,11 @@ class QueryBuilderRequest extends Request
     public static function setFilterArrayValueDelimiter(string $filterArrayValueDelimiter): void
     {
         static::$filterArrayValueDelimiter = $filterArrayValueDelimiter;
+    }
+
+    public static function setQuickSearchArrayValueDelimiter(string $quickSearchArrayValueDelimiter): void
+    {
+        static::$quickSearchArrayValueDelimiter = $quickSearchArrayValueDelimiter;
     }
 
     public static function getIncludesArrayValueDelimiter(): string

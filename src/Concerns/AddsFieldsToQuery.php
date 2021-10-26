@@ -37,10 +37,16 @@ trait AddsFieldsToQuery
     {
         $modelTableName = $this->getModel()->getTable();
 
-        $modelFields = $this->request->fields()->get($modelTableName);
+        $camelModelTableName = Str::camel($modelTableName);
+
+        $modelFields = $this->request->fields()->get($camelModelTableName);
+
+        $mustIncludeFields = $this->mustIncludeFields ?? collect([]);
+
+        $modelFields = array_unique(array_merge($modelFields ?? [], $mustIncludeFields->get($camelModelTableName) ?? []));
 
         if (empty($modelFields)) {
-            return;
+            throw InvalidFieldQuery::fieldsNotAllowed(collect(), $this->allowedFields);
         }
 
         $prependedFields = $this->prependFieldsWithTableName($modelFields, $modelTableName);
@@ -52,15 +58,19 @@ trait AddsFieldsToQuery
     {
         $table = Str::plural(Str::snake($relation)); // TODO: make this configurable
 
-        $fields = $this->request->fields()->mapWithKeys(function ($fields, $table) {
-            return [$table => $fields];
-        })->get($table);
+        $fields = $this->request->fields()->mapWithKeys(function ($fields, $relation) {
+            return [$relation => $fields];
+        })->get($relation);
 
-        if (! $fields) {
-            return [];
+        $mustIncludeFields = $this->mustIncludeFields ?? collect([]);
+
+        $fields = array_unique(array_merge($fields ?? [], $mustIncludeFields->get($relation) ?? []));
+
+        if (!$fields) {
+            throw InvalidFieldQuery::fieldsNotAllowed(collect([$relation]), $this->allowedFields);
         }
 
-        if (! $this->allowedFields instanceof Collection) {
+        if (!$this->allowedFields instanceof Collection) {
             // We have requested fields but no allowed fields (yet?)
 
             throw new UnknownIncludedFieldsQuery($fields);
@@ -96,8 +106,8 @@ trait AddsFieldsToQuery
 
     protected function prependField(string $field, ?string $table = null): string
     {
-        if (! $table) {
-            $table = $this->getModel()->getTable();
+        if (!$table) {
+            $table = Str::camel($this->getModel()->getTable());
         }
 
         if (Str::contains($field, '.')) {
