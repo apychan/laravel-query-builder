@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use Spatie\QueryBuilder\Filters\Filter;
 use Spatie\QueryBuilder\Filters\FiltersCallback;
 use Spatie\QueryBuilder\Filters\FiltersExact;
+use Spatie\QueryBuilder\Filters\FiltersExactOr;
 use Spatie\QueryBuilder\Filters\FiltersPartial;
 use Spatie\QueryBuilder\Filters\FiltersScope;
 use Spatie\QueryBuilder\Filters\FiltersTrashed;
@@ -61,6 +62,13 @@ class AllowedFilter
         static::setFilterArrayValueDelimiter($arrayValueDelimiter);
 
         return new static($name, new FiltersExact($addRelationConstraint), $internalName);
+    }
+
+    public static function exactOr(string $name, ?string $internalName = null, bool $addRelationConstraint = true, string $arrayValueDelimiter = null): self
+    {
+        static::setFilterArrayValueDelimiter($arrayValueDelimiter);
+
+        return new static($name, new FiltersExactOr($addRelationConstraint), $internalName);
     }
 
     public static function partial(string $name, $internalName = null, bool $addRelationConstraint = true, string $arrayValueDelimiter = null): self
