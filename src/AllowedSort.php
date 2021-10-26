@@ -5,7 +5,6 @@ namespace Spatie\QueryBuilder;
 use Spatie\QueryBuilder\Enums\SortDirection;
 use Spatie\QueryBuilder\Exceptions\InvalidDirection;
 use Spatie\QueryBuilder\Sorts\Sort;
-use Spatie\QueryBuilder\Sorts\SortsCallback;
 use Spatie\QueryBuilder\Sorts\SortsField;
 
 class AllowedSort
@@ -47,17 +46,12 @@ class AllowedSort
 
     public static function field(string $name, ?string $internalName = null): self
     {
-        return new static($name, new SortsField(), $internalName);
+        return new static($name, new SortsField, $internalName);
     }
 
     public static function custom(string $name, Sort $sortClass, ?string $internalName = null): self
     {
         return new static($name, $sortClass, $internalName);
-    }
-
-    public static function callback(string $name, $callback, ?string $internalName = null): self
-    {
-        return new static($name, new SortsCallback($callback), $internalName);
     }
 
     public function getName(): string

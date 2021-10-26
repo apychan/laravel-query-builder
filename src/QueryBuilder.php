@@ -17,8 +17,6 @@ use Spatie\QueryBuilder\Concerns\AddsIncludesToQuery;
 use Spatie\QueryBuilder\Concerns\AppendsAttributesToResults;
 use Spatie\QueryBuilder\Concerns\FiltersQuery;
 use Spatie\QueryBuilder\Concerns\SortsQuery;
-use Spatie\QueryBuilder\Concerns\AddMustIncludeFieldsToQuery;
-use Spatie\QueryBuilder\Concerns\QuickSearchQuery;
 use Spatie\QueryBuilder\Exceptions\InvalidSubject;
 
 /**
@@ -32,8 +30,6 @@ class QueryBuilder implements ArrayAccess
     use AddsFieldsToQuery;
     use AppendsAttributesToResults;
     use ForwardsCalls;
-    use AddMustIncludeFieldsToQuery;
-    use QuickSearchQuery;
 
     /** @var \Spatie\QueryBuilder\QueryBuilderRequest */
     protected $request;
