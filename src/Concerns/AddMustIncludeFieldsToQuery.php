@@ -1,6 +1,8 @@
 <?php
 
+
 namespace Spatie\QueryBuilder\Concerns;
+
 
 use Illuminate\Support\Str;
 

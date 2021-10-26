@@ -21,6 +21,8 @@ return [
         'fields' => 'fields',
 
         'append' => 'append',
+
+        'quickSearch' => 'quickSearch',
     ],
 
     /*

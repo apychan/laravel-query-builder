@@ -20,6 +20,7 @@ class QuickSearchesScope implements QuickSearch
         $propertyParts = collect(explode('.', $property));
 
         $scope = Str::camel($propertyParts->pop()); // TODO: Make this configurable?
+
         $values = array_values(Arr::wrap($values));
         $values = $this->resolveParameters($query, $values, $scope);
 
