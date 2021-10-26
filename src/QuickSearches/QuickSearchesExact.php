@@ -35,7 +35,11 @@ class QuickSearchesExact implements QuickSearch
             return;
         }
 
-        $query->orWhere($query->qualifyColumn($property), '=', $value);
+        if ($this->isRelationColumn($query, $property)) {
+            $query->Where($query->qualifyColumn($property), '=', $value);
+        } else {
+            $query->orWhere($query->qualifyColumn($property), '=', $value);
+        }
     }
 
     protected function isRelationProperty(Builder $query, string $property): bool
